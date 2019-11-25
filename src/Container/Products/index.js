@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Button, Modal, Form } from 'react-bootstrap';
+import { Button, Modal, Form, Alert } from 'react-bootstrap';
 import { Redirect } from "react-router-dom";
-
 import { AddProduct } from "../../Actions";
 
 class Product extends Component {
@@ -14,6 +13,7 @@ class Product extends Component {
             productName: '',
             productImage: '',
             productDesc: '',
+            errorMsg: ''
         }
     }
 
@@ -36,9 +36,23 @@ class Product extends Component {
     }
 
     handleSubmit = () => {
-        const { dispatch } = this.props;
-        const { productName, productImage, productDesc } = this.state;
-        dispatch(AddProduct(productName, productImage, productDesc));
+        if (this.state.productName === "") {
+            this.setState({
+                errorMsg: 'Please Enter Prodcut Name',
+            });
+        }
+        else {
+            const { dispatch } = this.props;
+            const { productName, productImage, productDesc } = this.state;
+            dispatch(AddProduct(productName, productImage, productDesc));
+            this.setState({
+                productName: '',
+                productImage: '',
+                productDesc: '',
+                errorMsg: '',
+            });
+        }
+
     }
 
     modalOpen = () => {
@@ -49,15 +63,14 @@ class Product extends Component {
 
     modalClose = () => {
         this.setState({
-            showModal: false
+            showModal: false,
         });
     };
 
     render() {
-        const { isAuthenticated } = this.props;
+        const { isAuthenticated, message } = this.props;
 
         if (isAuthenticated) {
-
             return (
                 <div>
                     <section className="main-content">
@@ -72,21 +85,21 @@ class Product extends Component {
                             <Modal.Title>Add Product</Modal.Title>
                         </Modal.Header>
                         <Modal.Body>
-
+                            {message ? <Alert variant={'success'}>{message}</Alert> : null}
                             <Form>
                                 <Form.Group controlId="ProductName">
                                     <Form.Label>Prodcut Name</Form.Label>
-                                    <Form.Control value={this.state.productName} onChange={this.handleChangeProductName} type="text" placeholder="Enter Prodcut Name" />
+                                    <Form.Control value={this.state.productName} onChange={this.handleChangeProductName} type="text" />
+                                    {this.state.errorMsg ? <Form.Label className="error-message">{this.state.errorMsg}</Form.Label> : null}
                                 </Form.Group>
-
                                 <Form.Group controlId="formBasicPassword">
                                     <Form.Label>Prodcut Image URL</Form.Label>
-                                    <Form.Control value={this.state.productImage} onChange={this.handleChangeProductImage} type="text" placeholder="Enter Prodcut Image URL" />
+                                    <Form.Control value={this.state.productImage} onChange={this.handleChangeProductImage} type="text" />
                                 </Form.Group>
 
                                 <Form.Group controlId="formBasicPassword">
                                     <Form.Label>Prodcut Description</Form.Label>
-                                    <Form.Control value={this.state.productDesc} onChange={this.handleChangeProductDesc} as="textarea" rows="3" placeholder="Enter Prodcut Description" />
+                                    <Form.Control value={this.state.productDesc} onChange={this.handleChangeProductDesc} as="textarea" rows="3" />
                                 </Form.Group>
 
                                 <Form.Group className="text-center">
@@ -109,6 +122,7 @@ class Product extends Component {
 function mapStateToProps(state) {
     return {
         isAuthenticated: state.auth.isAuthenticated,
+        message: state.product.message,
     };
 }
 export default connect(mapStateToProps)(Product);
