@@ -5,7 +5,8 @@ import {
   VERIFY_REQUEST,
   VERIFY_SUCCESS,
   REGISTARION_SUCCESS,
-  REGISTARION_ERROR
+  REGISTARION_ERROR,
+  GET_USER_DETAILS_SUCCESS
 } from "../Actions";
 
 export default (
@@ -18,7 +19,8 @@ export default (
     isAuthenticated: false,
     isSignUpCompleted: false,
     errorMsg: '',
-    user: {}
+    user: {},
+    userData:{}
   },
   action
 ) => {
@@ -69,6 +71,11 @@ export default (
         isSignUpCompleted: false,
         errorMsg: action.message,
         user: {}
+      };
+      case GET_USER_DETAILS_SUCCESS:
+      return {
+        ...state,
+        userData: action.data
       };
     default:
       return state;

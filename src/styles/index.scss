@@ -77,8 +77,21 @@ h6 {
   }
 }
 
+.welcome {
+  color: white;
+  margin-right: 30px;
+
+  .profile-pic {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-left: 5px;
+  }
+}
+
 .main {
   min-height: calc(100vh - 119px);
+  overflow: hidden;
 
   #banner {
     -ms-flex-align: center;
@@ -360,5 +373,46 @@ h6 {
 
   100% {
     transform: translate(24px, 0);
+  }
+}
+
+.g-loader {
+  top: 52px;
+  left: 0;
+  position: fixed;
+  width: 100%;
+  height: calc(100% - 172px);
+  background: rgba(255, 255, 255, 1);
+
+  .lds-ellipsis {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -40px;
+    margin-top: -40px;
+  }
+}
+
+.pdt-list {
+  padding: $padding 0;
+
+  .cart-row {
+    display: flex;
+
+    .cart-col:first-child {
+      flex: 0 0 200px;
+      max-width: 200px;
+      padding: 0;
+
+      img {
+        max-width: 100%;
+      }
+    }
+
+    .cart-col {
+      padding-left: $padding * 2;
+      flex: 0 0 calc(100% - 200px);
+      max-width: calc(100% - 200px);
+    }
   }
 }

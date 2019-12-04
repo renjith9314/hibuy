@@ -36,10 +36,10 @@ class Login extends Component {
 
     render() {
 
-        const { isAuthenticated, errorMsg } = this.props;
+        const { isAuthenticated, errorMsg } = this.props; 
 
         if (isAuthenticated) {
-            return <Redirect to="/product" />;
+            return <Redirect to="/cart" />;
         }
         else {
             return (
@@ -55,11 +55,7 @@ class Login extends Component {
                         <Form.Group controlId="formBasicPassword">
                             <Form.Label>Password</Form.Label>
                             <Form.Control value={this.state.password} onChange={this.handleChangePassword} type="password" placeholder="Password" />
-                        </Form.Group>
-
-                        <Form.Group controlId="formBasicCheckbox">
-                            <Form.Check type="checkbox" label="Remember Me" />
-                        </Form.Group>
+                        </Form.Group>                        
 
                         <Form.Group>
                             <Button variant="primary" type="button" onClick={this.handleSubmit}>Login</Button>
@@ -81,7 +77,8 @@ function mapStateToProps(state) {
         isLoggingIn: state.auth.isLoggingIn,
         loginError: state.auth.loginError,
         isAuthenticated: state.auth.isAuthenticated,
-        errorMsg: state.auth.errorMsg
+        errorMsg: state.auth.errorMsg,
+        cart: state.product.cart,
     };
 }
 export default connect(mapStateToProps)(Login);

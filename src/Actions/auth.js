@@ -1,10 +1,13 @@
-import { fb } from "../firebase";
+import { fb, db } from "../firebase";
 
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_ERROR = "LOGIN_ERROR";
 export const LOGOUT_SUCCESS = "LOGOUT_SUCCESS";
 export const VERIFY_REQUEST = "VERIFY_REQUEST";
 export const VERIFY_SUCCESS = "VERIFY_SUCCESS";
+export const LOGIN_TEST = "LOGIN_TEST";
+export const GET_USER_DETAILS_SUCCESS = "GET_USER_DETAILS_SUCCESS";
+export const GET_USER_DETAILS_ERROR = "GET_USER_DETAILS_ERROR";
 
 
 const receiveLogin = user => {
@@ -15,6 +18,7 @@ const receiveLogin = user => {
 };
 
 const receiveLogout = () => {
+  console.log('aasasas');
   return {
     type: LOGOUT_SUCCESS
   };
@@ -39,6 +43,13 @@ const loginError = (message) => {
   };
 };
 
+const gettUserDetailsSuccess = data => {
+  return {
+    type: GET_USER_DETAILS_SUCCESS,
+    data
+  };
+};
+
 export const loginUser = (email, password) => dispatch => {
   fb.auth()
     .signInWithEmailAndPassword(email, password)
@@ -51,13 +62,9 @@ export const loginUser = (email, password) => dispatch => {
 };
 
 export const logoutUser = () => dispatch => {
+  dispatch(receiveLogout());
   fb.auth()
-    .signOut()
-    .then(() => {
-      dispatch(receiveLogout());
-    })
-    .catch(error => {
-    });
+    .signOut();
 };
 
 export const verifyAuth = () => dispatch => {
@@ -70,3 +77,20 @@ export const verifyAuth = () => dispatch => {
       dispatch(verifySuccess());
     });
 };
+
+export const getUserDetails = () => dispatch => {
+  fb.auth()
+    .onAuthStateChanged(user => {
+      if (user) {
+        let userId = user.uid;
+        db
+          .collection('users')
+          .doc(userId)
+          .get()
+          .then(querySnapshot => {
+            dispatch(gettUserDetailsSuccess(querySnapshot.data()));
+          }).catch(error => {
+          })
+      }
+    })
+}

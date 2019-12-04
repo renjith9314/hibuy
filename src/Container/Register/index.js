@@ -9,6 +9,9 @@ class Register extends Component {
         this.state = {
             email: '',
             password: '',
+            fName: '',
+            lName: '',
+            image: null,
             hasError: true,
             errorMsg: null,
         }
@@ -26,11 +29,30 @@ class Register extends Component {
         });
     }
 
+    handleChangeFName = (event) => {
+        this.setState({
+            fName: event.target.value
+        });
+    }
+
+    handleChangeLName = (event) => {
+        this.setState({
+            lName: event.target.value,
+        });
+    }
+
     handleSubmit = () => {
         const { dispatch } = this.props;
-        const { email, password } = this.state;
-        dispatch(registerUser(email, password));
+        const { email, password, image, fName, lName } = this.state;
+        dispatch(registerUser(email, password, image, fName, lName));
     }
+
+    handleChangeImage = e => {
+        if (e.target.files[0]) {
+            const image = e.target.files[0];
+            this.setState(() => ({ image }));
+        }
+    };
 
     render() {
 
@@ -42,6 +64,16 @@ class Register extends Component {
                 <h4>REGISTER</h4>
                 {errorMsg ? <Alert variant={error}>{errorMsg}</Alert> : null}
                 <Form>
+                    <Form.Group controlId="formBasicFName">
+                        <Form.Label>First name</Form.Label>
+                        <Form.Control value={this.state.fName} onChange={this.handleChangeFName} type="text" placeholder="Enter First name" />
+                    </Form.Group>
+
+                    <Form.Group controlId="formBasicLName">
+                        <Form.Label>Last name</Form.Label>
+                        <Form.Control value={this.state.lName} onChange={this.handleChangeLName} type="text" placeholder="Enter Last name" />
+                    </Form.Group>
+
                     <Form.Group controlId="formBasicEmail">
                         <Form.Label>Email address</Form.Label>
                         <Form.Control value={this.state.email} onChange={this.handleChangeEmail} type="email" placeholder="Enter email" />
@@ -50,6 +82,11 @@ class Register extends Component {
                     <Form.Group controlId="formBasicPassword">
                         <Form.Label>Password</Form.Label>
                         <Form.Control value={this.state.password} onChange={this.handleChangePassword} type="password" placeholder="Password" />
+                    </Form.Group>
+
+                    <Form.Group controlId="formBasicImage">
+                        <Form.Label>Pfrofile Picture</Form.Label>
+                        <Form.Control onChange={this.handleChangeImage} type="file" />
                     </Form.Group>
 
                     <Form.Group>
